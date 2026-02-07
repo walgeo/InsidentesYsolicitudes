@@ -1,0 +1,90 @@
+.filters {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) repeat(2, 1fr) auto;
+  gap: 15px;
+  margin-bottom: 20px;
+  align-items: end;
+}
+
+@media (max-width: 1200px) {
+  .filters {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .filters {
+    grid-template-columns: 1fr;
+  }
+}
+
+.filter-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+.sortable:hover {
+  background-color: #f0f0f0;
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 5px;
+}
+
+.date-cell {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.date-value {
+  font-weight: 500;
+  color: #333;
+}
+
+.date-author {
+  font-size: 11px;
+  color: #888;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.page-info {
+  color: #666;
+  font-size: 14px;
+}
+
+.text-center {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+}
+

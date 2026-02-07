@@ -1,0 +1,175 @@
+### Variables globales
+@host = http://localhost:8081
+@content_type = application/json
+
+### ==================== ESTADOS ====================
+
+### Obtener todos los estados
+GET {{host}}/api/estados
+
+### Obtener estado por ID
+GET {{host}}/api/estados/1
+
+### ==================== PRIORIDADES ====================
+
+### Obtener todas las prioridades
+GET {{host}}/api/prioridades
+
+### Obtener prioridad por ID
+GET {{host}}/api/prioridades/1
+
+### ==================== TICKETS ====================
+
+### Obtener todos los tickets (sin filtros)
+GET {{host}}/api/tickets
+
+### Obtener tickets con filtros y paginación
+GET {{host}}/api/tickets?page=0&size=10&aplicacion=APP1&estadoId=1
+
+### Obtener tickets ordenados
+GET {{host}}/api/tickets?page=0&size=10&sort=creadoEn,desc&sort=titulo,asc
+
+### Obtener un ticket específico
+GET {{host}}/api/tickets/1
+
+### Crear un nuevo ticket
+POST {{host}}/api/tickets
+Content-Type: {{content_type}}
+
+{
+  "titulo": "Error en login",
+  "descripcion": "Los usuarios no pueden iniciar sesión en la aplicación",
+  "tipo": "INCIDENTE",
+  "aplicacion": "APP1",
+  "prioridadId": 1,
+  "estadoId": 1,
+  "creadoPor": "juan.perez@example.com",
+  "asignadoA": "maria.garcia@example.com"
+}
+
+### Crear un ticket de solicitud
+POST {{host}}/api/tickets
+Content-Type: {{content_type}}
+
+{
+  "titulo": "Solicitud de nuevo reporte",
+  "descripcion": "Se necesita un reporte de ventas por región",
+  "tipo": "SOLICITUD",
+  "aplicacion": "APP2",
+  "prioridadId": 2,
+  "estadoId": 1,
+  "creadoPor": "admin@example.com"
+}
+
+### Actualizar un ticket
+PUT {{host}}/api/tickets/1
+Content-Type: {{content_type}}
+
+{
+  "titulo": "Error en login - ACTUALIZADO",
+  "descripcion": "Los usuarios no pueden iniciar sesión. Posible problema de seguridad.",
+  "tipo": "INCIDENTE",
+  "aplicacion": "APP1",
+  "prioridadId": 1,
+  "estadoId": 2,
+  "creadoPor": "juan.perez@example.com",
+  "asignadoA": "carlos.lopez@example.com"
+}
+
+### Eliminar un ticket
+DELETE {{host}}/api/tickets/1
+
+### ==================== COMENTARIOS ====================
+
+### Obtener todos los comentarios
+GET {{host}}/api/comentarios
+
+### Obtener comentarios de un ticket
+GET {{host}}/api/comentarios/ticket/1
+
+### Crear un comentario
+POST {{host}}/api/comentarios
+Content-Type: {{content_type}}
+
+{
+  "ticketId": 1,
+  "mensaje": "He revisado el código y encontré el problema en el módulo de autenticación. Necesitamos actualizar las dependencias."
+}
+
+### Obtener un comentario específico
+GET {{host}}/api/comentarios/1
+
+### Actualizar un comentario
+PUT {{host}}/api/comentarios/1
+Content-Type: {{content_type}}
+
+{
+  "ticketId": 1,
+  "mensaje": "He revisado el código. El problema está en validateCredentials() - falta una validación NULL."
+}
+
+### Eliminar un comentario
+DELETE {{host}}/api/comentarios/1
+
+### ==================== BÚSQUEDAS COMUNES ====================
+
+### Tickets abiertos de APP1
+GET {{host}}/api/tickets?aplicacion=APP1&estadoId=1&page=0&size=20
+
+### Tickets de alta prioridad no resueltos
+GET {{host}}/api/tickets?prioridadId=1&estadoId=1&page=0&size=20
+
+### Tickets recientes (últimos 7 días)
+GET {{host}}/api/tickets?sort=creadoEn,desc&page=0&size=10
+
+### Tickets asignados (con comentarios)
+GET {{host}}/api/tickets?page=0&size=10
+# Luego ejecutar para cada ticket:
+GET {{host}}/api/comentarios/ticket/{id}
+
+### ==================== PRUEBAS DE ERROR ====================
+
+### Crear ticket con datos inválidos (falta título)
+POST {{host}}/api/tickets
+Content-Type: {{content_type}}
+
+{
+  "descripcion": "Sin titulo",
+  "tipo": "INCIDENTE",
+  "aplicacion": "APP1",
+  "prioridadId": 1,
+  "estadoId": 1
+}
+
+### Obtener ticket que no existe
+GET {{host}}/api/tickets/99999
+
+### Actualizar ticket con ID inválido
+PUT {{host}}/api/tickets/99999
+Content-Type: {{content_type}}
+
+{
+  "titulo": "No existe",
+  "tipo": "INCIDENTE",
+  "aplicacion": "APP1",
+  "prioridadId": 1,
+  "estadoId": 1
+}
+
+### Crear comentario para ticket inexistente
+POST {{host}}/api/comentarios
+Content-Type: {{content_type}}
+
+{
+  "ticketId": 99999,
+  "mensaje": "Comentario en ticket fantasma"
+}
+
+### ==================== HEALTH CHECK ====================
+
+### Verificar que la aplicación está corriendo
+GET {{host}}/actuator/health
+
+### Ver métricas disponibles
+GET {{host}}/actuator/metrics
+

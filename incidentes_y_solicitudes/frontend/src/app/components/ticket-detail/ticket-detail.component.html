@@ -1,0 +1,98 @@
+<div *ngIf="loading" class="loading">Cargando ticket...</div>
+
+<div *ngIf="!loading && ticket" class="ticket-detail">
+  <div class="card">
+    <div class="header">
+      <h2>🎫 Ticket #{{ ticket.id }}</h2>
+      <div class="actions">
+        <a [routerLink]="['/tickets', ticket.id, 'edit']" class="btn btn-success">Editar</a>
+        <button (click)="deleteTicket()" class="btn btn-danger">Eliminar</button>
+        <a routerLink="/tickets" class="btn">Volver</a>
+      </div>
+    </div>
+
+    <div class="ticket-info">
+      <div class="info-row">
+        <label>Título:</label>
+        <span class="value">{{ ticket.titulo }}</span>
+      </div>
+
+      <div class="info-row">
+        <label>Descripción:</label>
+        <span class="value">{{ ticket.descripcion || 'Sin descripción' }}</span>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Tipo:</label>
+          <span>{{ ticket.tipo }}</span>
+        </div>
+
+        <div class="info-item">
+          <label>Aplicación:</label>
+          <span>{{ ticket.aplicacion }}</span>
+        </div>
+
+        <div class="info-item">
+          <label>Prioridad:</label>
+          <span class="badge badge-warning">{{ ticket.prioridadNombre }}</span>
+        </div>
+
+        <div class="info-item">
+          <label>Estado:</label>
+          <span class="badge" [ngClass]="getEstadoBadgeClass(ticket.estadoNombre!)">
+            {{ ticket.estadoNombre }}
+          </span>
+        </div>
+
+        <div class="info-item">
+          <label>Creado por:</label>
+          <span>{{ ticket.creadoPor }}</span>
+        </div>
+
+        <div class="info-item">
+          <label>Asignado a:</label>
+          <span>{{ ticket.asignadoA || 'Sin asignar' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comentarios -->
+  <div class="card">
+    <h3>💬 Comentarios</h3>
+
+    <div class="comentarios-list">
+      <div *ngFor="let comentario of comentarios" class="comentario">
+        <div class="comentario-header">
+          <strong>{{ comentario.creadoPor }}</strong>
+          <span class="fecha">{{ comentario.creadoEn | date:'short' }}</span>
+        </div>
+        <div class="comentario-body">
+          {{ comentario.mensaje }}
+        </div>
+      </div>
+
+      <div *ngIf="comentarios.length === 0" class="no-comentarios">
+        No hay comentarios aún
+      </div>
+    </div>
+
+    <!-- Nuevo Comentario -->
+    <div class="nuevo-comentario">
+      <textarea
+        class="form-control"
+        [(ngModel)]="nuevoComentario"
+        placeholder="Agregar un comentario..."
+        rows="3">
+      </textarea>
+      <button
+        class="btn btn-primary"
+        (click)="addComentario()"
+        [disabled]="!nuevoComentario.trim()">
+        Agregar Comentario
+      </button>
+    </div>
+  </div>
+</div>
+

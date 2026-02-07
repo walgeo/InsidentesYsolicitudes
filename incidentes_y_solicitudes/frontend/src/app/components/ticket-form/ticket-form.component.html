@@ -1,0 +1,150 @@
+<div class="card">
+  <h2>{{ isEditMode ? '✏️ Editar Ticket' : '➕ Nuevo Ticket' }}</h2>
+
+  <!-- Error Alert -->
+  <app-error-alert
+    [show]="showError"
+    [message]="errorMessage"
+    [details]="errorDetails"
+    (onClose)="showError = false">
+  </app-error-alert>
+
+  <form (ngSubmit)="onSubmit()" #form="ngForm">
+    <!-- Titulo -->
+    <div class="form-group" [class.has-error]="fieldErrors['titulo']">
+      <label for="titulo">
+        Título
+        <span class="required">*</span>
+        <span *ngIf="fieldErrors['titulo']" class="error-text">{{ fieldErrors['titulo'] }}</span>
+      </label>
+      <input
+        id="titulo"
+        type="text"
+        class="form-control"
+        [class.is-invalid]="fieldErrors['titulo']"
+        [(ngModel)]="ticket.titulo"
+        name="titulo"
+        required
+        placeholder="Ingresa el título del ticket">
+    </div>
+
+    <!-- Descripción -->
+    <div class="form-group">
+      <label for="descripcion">Descripción</label>
+      <textarea
+        id="descripcion"
+        class="form-control"
+        [(ngModel)]="ticket.descripcion"
+        name="descripcion"
+        rows="4"
+        placeholder="Descripción detallada del ticket">
+      </textarea>
+    </div>
+
+    <!-- Tipo -->
+    <div class="form-row">
+      <div class="form-group" [class.has-error]="fieldErrors['tipo']">
+        <label for="tipo">
+          Tipo
+          <span class="required">*</span>
+          <span *ngIf="fieldErrors['tipo']" class="error-text">{{ fieldErrors['tipo'] }}</span>
+        </label>
+        <select
+          id="tipo"
+          class="form-control"
+          [class.is-invalid]="fieldErrors['tipo']"
+          [(ngModel)]="ticket.tipo"
+          name="tipo"
+          required>
+          <option value="INCIDENTE">Incidente</option>
+          <option value="SOLICITUD">Solicitud</option>
+        </select>
+      </div>
+
+      <!-- Aplicación -->
+      <div class="form-group" [class.has-error]="fieldErrors['aplicacion']">
+        <label for="aplicacion">
+          Aplicación
+          <span class="required">*</span>
+          <span *ngIf="fieldErrors['aplicacion']" class="error-text">{{ fieldErrors['aplicacion'] }}</span>
+        </label>
+        <input
+          id="aplicacion"
+          type="text"
+          class="form-control"
+          [class.is-invalid]="fieldErrors['aplicacion']"
+          [(ngModel)]="ticket.aplicacion"
+          name="aplicacion"
+          required
+          placeholder="ej: APP1">
+      </div>
+    </div>
+
+    <!-- Prioridad y Estado -->
+    <div class="form-row">
+      <div class="form-group" [class.has-error]="fieldErrors['prioridadId']">
+        <label for="prioridad">
+          Prioridad
+          <span class="required">*</span>
+          <span *ngIf="fieldErrors['prioridadId']" class="error-text">{{ fieldErrors['prioridadId'] }}</span>
+        </label>
+        <select
+          id="prioridad"
+          class="form-control"
+          [class.is-invalid]="fieldErrors['prioridadId']"
+          [(ngModel)]="ticket.prioridadId"
+          name="prioridadId">
+          <option [value]="null">Selecciona una prioridad</option>
+          <option *ngFor="let p of prioridades" [value]="p.id">
+            {{ p.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group" [class.has-error]="fieldErrors['estadoId']">
+        <label for="estado">
+          Estado
+          <span class="required">*</span>
+          <span *ngIf="fieldErrors['estadoId']" class="error-text">{{ fieldErrors['estadoId'] }}</span>
+          <p class="state-info" *ngIf="isStateTransitionError">
+            💡 Recuerda: Los estados deben avanzar en orden: ABIERTO → EN_PROGRESO → RESUELTO → CERRADO
+          </p>
+        </label>
+        <select
+          id="estado"
+          class="form-control"
+          [class.is-invalid]="fieldErrors['estadoId']"
+          [(ngModel)]="ticket.estadoId"
+          name="estadoId">
+          <option [value]="null">Selecciona un estado</option>
+          <option *ngFor="let e of estados" [value]="e.id">
+            {{ e.nombre }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Asignado a -->
+    <div class="form-group">
+      <label for="asignadoA">Asignado a</label>
+      <input
+        id="asignadoA"
+        type="text"
+        class="form-control"
+        [(ngModel)]="ticket.asignadoA"
+        name="asignadoA"
+        placeholder="Nombre del responsable">
+    </div>
+
+    <!-- Buttons -->
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        {{ loading ? 'Guardando...' : (isEditMode ? 'Actualizar' : 'Crear') }} Ticket
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="loading">
+        Cancelar
+      </button>
+    </div>
+  </form>
+</div>
+

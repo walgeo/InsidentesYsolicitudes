@@ -1,0 +1,153 @@
+<div class="card">
+  <h2>📋 Lista de Tickets</h2>
+
+  <!-- Filtros -->
+  <div class="filters">
+    <div class="form-group">
+      <label>Aplicación:</label>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="filterAplicacion"
+        placeholder="Filtrar por aplicación">
+    </div>
+
+    <div class="form-group">
+      <label>Estado:</label>
+      <select class="form-control" [(ngModel)]="filterEstadoId">
+        <option [ngValue]="undefined">Todos</option>
+        <option *ngFor="let estado of estados" [ngValue]="estado.id">
+          {{ estado.nombre }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Prioridad:</label>
+      <select class="form-control" [(ngModel)]="filterPrioridadId">
+        <option [ngValue]="undefined">Todas</option>
+        <option *ngFor="let prioridad of prioridades" [ngValue]="prioridad.id">
+          {{ prioridad.nombre }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Fecha Desde:</label>
+      <input
+        type="datetime-local"
+        class="form-control"
+        [(ngModel)]="filterFechaDesde"
+        placeholder="Desde">
+    </div>
+
+    <div class="form-group">
+      <label>Fecha Hasta:</label>
+      <input
+        type="datetime-local"
+        class="form-control"
+        [(ngModel)]="filterFechaHasta"
+        placeholder="Hasta">
+    </div>
+
+    <div class="filter-actions">
+      <button class="btn btn-primary" (click)="applyFilters()">Filtrar</button>
+      <button class="btn" (click)="clearFilters()">Limpiar</button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading">Cargando tickets...</div>
+
+  <!-- Tabla de Tickets -->
+  <div *ngIf="!loading" class="table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th (click)="sortBy('id')" class="sortable">
+            ID {{ getSortIcon('id') }}
+          </th>
+          <th (click)="sortBy('titulo')" class="sortable">
+            Título {{ getSortIcon('titulo') }}
+          </th>
+          <th (click)="sortBy('tipo')" class="sortable">
+            Tipo {{ getSortIcon('tipo') }}
+          </th>
+          <th (click)="sortBy('aplicacion')" class="sortable">
+            Aplicación {{ getSortIcon('aplicacion') }}
+          </th>
+          <th (click)="sortBy('prioridadId')" class="sortable">
+            Prioridad {{ getSortIcon('prioridadId') }}
+          </th>
+          <th (click)="sortBy('estadoId')" class="sortable">
+            Estado {{ getSortIcon('estadoId') }}
+          </th>
+          <th (click)="sortBy('creadoEn')" class="sortable">
+            Fecha Creación {{ getSortIcon('creadoEn') }}
+          </th>
+          <th (click)="sortBy('actualizadoEn')" class="sortable">
+            Última Actualización {{ getSortIcon('actualizadoEn') }}
+          </th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ticket of tickets">
+          <td>{{ ticket.id }}</td>
+          <td>
+            <a [routerLink]="['/tickets', ticket.id]">{{ ticket.titulo }}</a>
+          </td>
+          <td>{{ ticket.tipo }}</td>
+          <td>{{ ticket.aplicacion }}</td>
+          <td>
+            <span class="badge badge-warning">{{ ticket.prioridadNombre }}</span>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="getEstadoBadgeClass(ticket.estadoNombre!)">
+              {{ ticket.estadoNombre }}
+            </span>
+          </td>
+          <td class="date-cell">
+            <div class="date-value">{{ ticket.creadoEn | date:'dd/MM/yyyy HH:mm' }}</div>
+            <div class="date-author" *ngIf="ticket.creadoPor">por {{ ticket.creadoPor }}</div>
+          </td>
+          <td class="date-cell">
+            <div class="date-value">{{ ticket.actualizadoEn | date:'dd/MM/yyyy HH:mm' }}</div>
+            <div class="date-author" *ngIf="ticket.actualizadoPor">por {{ ticket.actualizadoPor }}</div>
+          </td>
+          <td class="actions">
+            <a [routerLink]="['/tickets', ticket.id]" class="btn btn-sm btn-primary">Ver</a>
+            <a [routerLink]="['/tickets', ticket.id, 'edit']" class="btn btn-sm btn-success">Editar</a>
+            <button (click)="deleteTicket(ticket.id!)" class="btn btn-sm btn-danger">Eliminar</button>
+          </td>
+        </tr>
+        <tr *ngIf="tickets.length === 0">
+          <td colspan="9" class="text-center">No hay tickets disponibles</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginación -->
+  <div class="pagination">
+    <button
+      class="btn"
+      [disabled]="currentPage === 0"
+      (click)="previousPage()">
+      ← Anterior
+    </button>
+
+    <span class="page-info">
+      Página {{ currentPage + 1 }} de {{ totalPages }}
+      ({{ totalElements }} tickets)
+    </span>
+
+    <button
+      class="btn"
+      [disabled]="currentPage >= totalPages - 1"
+      (click)="nextPage()">
+      Siguiente →
+    </button>
+  </div>
+</div>
+

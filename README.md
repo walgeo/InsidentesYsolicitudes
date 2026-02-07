@@ -106,7 +106,7 @@ Todo está containerizado:
 1. Abre PowerShell
 2. Navega a la carpeta del proyecto:
    ```powershell
-   cd C:\Users\walte\OneDrive\Documentos\PROYECTO_ALTAMIRA\incidentes_y_solicitudes
+   cd incidentes_y_solicitudes
    ```
 3. Ejecuta el script:
    ```powershell
@@ -129,7 +129,7 @@ Todo está containerizado:
 
 ```powershell
 # 1. Navegar al directorio del proyecto
-cd C:\Users\walte\OneDrive\Documentos\PROYECTO_ALTAMIRA\incidentes_y_solicitudes
+cd incidentes_y_solicitudes
 
 # 2. Levantar TODO con un comando
 docker-compose up -d

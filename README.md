@@ -16,13 +16,7 @@ docker-compose up -d
 # 3. Listo. El proyecto está corriendo en http://localhost:4200
 ```
 
-No necesitas instalar:
-- ❌ Java
-- ❌ Node.js
-- ❌ PostgreSQL
-- ❌ Maven
-- ❌ npm
-- ❌ Git
+No necesitas instalar nada.
 
 Todo está adentro del contenedor. Solo ejecuta Docker y listo.
 

@@ -1,0 +1,658 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Incidentes y Solicitudes API",
+    "description": "Colección completa de endpoints del sistema con autenticación JWT",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8081",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "🔐 Autenticación",
+      "item": [
+        {
+          "name": "Login - Obtener JWT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"jwt_token\", jsonData.token);",
+                  "    console.log(\"Token guardado: \" + jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Autenticarse y obtener token JWT. El token se guarda automáticamente en la variable de colección."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🎫 Tickets",
+      "item": [
+        {
+          "name": "Obtener Todos los Tickets (Paginado)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tickets?page=0&size=10&sort=creadoEn,desc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tickets"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0",
+                  "description": "Número de página (0-indexed)"
+                },
+                {
+                  "key": "size",
+                  "value": "10",
+                  "description": "Tamaño de página (1-100)"
+                },
+                {
+                  "key": "sort",
+                  "value": "creadoEn,desc",
+                  "description": "Ordenamiento (campo,dirección)"
+                }
+              ]
+            },
+            "description": "Lista todos los tickets con paginación y ordenamiento."
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Tickets por Aplicación",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tickets?aplicacion=APP1&page=0&size=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tickets"],
+              "query": [
+                {
+                  "key": "aplicacion",
+                  "value": "APP1",
+                  "description": "Filtrar por aplicación"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Filtra tickets por aplicación."
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Tickets por Estado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tickets?estadoId=1&page=0&size=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tickets"],
+              "query": [
+                {
+                  "key": "estadoId",
+                  "value": "1",
+                  "description": "ID del estado (1=ABIERTO, 2=EN_PROGRESO, 3=CERRADO)"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Filtra tickets por estado."
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Tickets por Prioridad",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tickets?prioridadId=3&page=0&size=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tickets"],
+              "query": [
+                {
+                  "key": "prioridadId",
+                  "value": "3",
+                  "description": "ID de prioridad (1=BAJA, 2=MEDIA, 3=ALTA, 4=CRITICA)"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Filtra tickets por prioridad."
+          },
+          "response": []
+        },
+        {
+          "name": "Filtrar Tickets - Combinado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tickets?aplicacion=APP1&estadoId=1&prioridadId=3&page=0&size=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tickets"],
+              "query": [
+                {
+                  "key": "aplicacion",
+                  "value": "APP1"
+                },
+                {
+                  "key": "estadoId",
+                  "value": "1"
+                },
+                {
+                  "key": "prioridadId",
+                  "value": "3"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Filtra tickets combinando múltiples criterios."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Ticket por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tickets/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tickets", "1"]
+            },
+            "description": "Obtiene un ticket específico por su ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Nuevo Ticket (INCIDENTE)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Error en módulo de reportes\",\n  \"descripcion\": \"El módulo de reportes no genera PDFs correctamente cuando hay más de 100 registros\",\n  \"tipo\": \"INCIDENTE\",\n  \"aplicacion\": \"SISTEMA_REPORTES\",\n  \"prioridadId\": 3,\n  \"estadoId\": 1,\n  \"creadoPor\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tickets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tickets"]
+            },
+            "description": "Crea un nuevo ticket de tipo INCIDENTE."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Nueva Solicitud",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Solicitud de acceso a base de datos\",\n  \"descripcion\": \"Necesito acceso de lectura a la base de datos de producción para generar reportes\",\n  \"tipo\": \"SOLICITUD\",\n  \"aplicacion\": \"BASE_DATOS\",\n  \"prioridadId\": 2,\n  \"estadoId\": 1,\n  \"creadoPor\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tickets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tickets"]
+            },
+            "description": "Crea una nueva solicitud de servicio."
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Ticket",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Error en módulo de reportes - ACTUALIZADO\",\n  \"descripcion\": \"El módulo de reportes no genera PDFs. Se identificó que es un problema de memoria\",\n  \"tipo\": \"INCIDENTE\",\n  \"aplicacion\": \"SISTEMA_REPORTES\",\n  \"prioridadId\": 4,\n  \"estadoId\": 2,\n  \"asignadoA\": \"soporte.tecnico@empresa.com\",\n  \"actualizadoPor\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tickets/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tickets", "1"]
+            },
+            "description": "Actualiza un ticket existente."
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Ticket",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/tickets/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tickets", "1"]
+            },
+            "description": "Elimina un ticket por su ID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💬 Comentarios",
+      "item": [
+        {
+          "name": "Obtener Todos los Comentarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/comentarios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "comentarios"]
+            },
+            "description": "Lista todos los comentarios del sistema."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Comentarios de un Ticket",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/comentarios/ticket/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "comentarios", "ticket", "1"]
+            },
+            "description": "Obtiene todos los comentarios asociados a un ticket específico."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Comentario por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/comentarios/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "comentarios", "1"]
+            },
+            "description": "Obtiene un comentario específico por su ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Comentario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ticketId\": 1,\n  \"mensaje\": \"Se identificó que el problema está relacionado con la memoria disponible. Trabajando en la solución.\",\n  \"creadoPor\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/comentarios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "comentarios"]
+            },
+            "description": "Crea un nuevo comentario para un ticket."
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Comentario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mensaje\": \"Actualización: Se aumentó la memoria del servidor de 4GB a 8GB. El problema está resuelto.\",\n  \"actualizadoPor\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/comentarios/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "comentarios", "1"]
+            },
+            "description": "Actualiza un comentario existente."
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Comentario",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/comentarios/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "comentarios", "1"]
+            },
+            "description": "Elimina un comentario por su ID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📊 Estados",
+      "item": [
+        {
+          "name": "Obtener Todos los Estados",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/estados",
+              "host": ["{{base_url}}"],
+              "path": ["api", "estados"]
+            },
+            "description": "Lista todos los estados disponibles (ABIERTO, EN_PROGRESO, CERRADO, RECHAZADO)."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Estado por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/estados/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "estados", "1"]
+            },
+            "description": "Obtiene un estado específico por su ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Estado",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"EN_REVISION\",\n  \"descripcion\": \"Ticket en revisión por el supervisor\",\n  \"activo\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/estados",
+              "host": ["{{base_url}}"],
+              "path": ["api", "estados"]
+            },
+            "description": "Crea un nuevo estado personalizado."
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Estado",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"ABIERTO\",\n  \"descripcion\": \"Ticket abierto y pendiente de asignación - ACTUALIZADO\",\n  \"activo\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/estados/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "estados", "1"]
+            },
+            "description": "Actualiza un estado existente."
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Estado",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/estados/5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "estados", "5"]
+            },
+            "description": "Elimina un estado (solo si no está en uso)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "⚡ Prioridades",
+      "item": [
+        {
+          "name": "Obtener Todas las Prioridades",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/prioridades",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prioridades"]
+            },
+            "description": "Lista todas las prioridades disponibles (BAJA, MEDIA, ALTA, CRITICA)."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Prioridad por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/prioridades/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prioridades", "1"]
+            },
+            "description": "Obtiene una prioridad específica por su ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Prioridad",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"URGENTE\",\n  \"descripcion\": \"Requiere atención inmediata - más que crítica\",\n  \"activo\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/prioridades",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prioridades"]
+            },
+            "description": "Crea una nueva prioridad personalizada."
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar Prioridad",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"BAJA\",\n  \"descripcion\": \"Prioridad baja - puede esperar varios días - ACTUALIZADA\",\n  \"activo\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/prioridades/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prioridades", "1"]
+            },
+            "description": "Actualiza una prioridad existente."
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Prioridad",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/prioridades/5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "prioridades", "5"]
+            },
+            "description": "Elimina una prioridad (solo si no está en uso)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🏥 Health Check",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/actuator/health",
+              "host": ["{{base_url}}"],
+              "path": ["actuator", "health"]
+            },
+            "description": "Verifica el estado de salud del backend."
+          },
+          "response": []
+        },
+        {
+          "name": "Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/actuator/info",
+              "host": ["{{base_url}}"],
+              "path": ["actuator", "info"]
+            },
+            "description": "Información de la aplicación."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
+

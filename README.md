@@ -2,7 +2,7 @@
 
 Aplicación web para la gestión de incidentes y solicitudes de servicio con autenticación JWT, control de acceso basado en roles (RBAC) y cobertura de pruebas con JaCoCo.
 
-## ⚡ TL;DR - Lo Más Importante
+## ⚡ Importante
 
 **¿Qué necesitas instalar?**
 

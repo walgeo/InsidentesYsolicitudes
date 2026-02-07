@@ -3,8 +3,16 @@ CREATE SCHEMA IF NOT EXISTS incidentes_db;
 CREATE TABLE IF NOT EXISTS incidentes_db.cat_roles (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL UNIQUE,
-    descripcion VARCHAR(200)
+    descripcion VARCHAR(200),
+    actualizado_en TIMESTAMP,
+    actualizado_por VARCHAR(100)
 );
+
+ALTER TABLE incidentes_db.cat_roles
+ADD COLUMN IF NOT EXISTS creado_en TIMESTAMP;
+
+ALTER TABLE incidentes_db.cat_roles
+ADD COLUMN IF NOT EXISTS creado_por VARCHAR(100);
 
 CREATE TABLE IF NOT EXISTS incidentes_db.usuarios (
     id BIGSERIAL PRIMARY KEY,
@@ -17,7 +25,8 @@ CREATE TABLE IF NOT EXISTS incidentes_db.usuarios (
     creado_en TIMESTAMP NOT NULL DEFAULT NOW(),
     actualizado_en TIMESTAMP,
     creado_por VARCHAR(100) NOT NULL,
-    actualizado_por VARCHAR(100)
+    actualizado_por VARCHAR(100),
+    activo BOOLEAN DEFAULT TRUE
 );
 
 CREATE INDEX IF NOT EXISTS idx_usuarios_usuario ON incidentes_db.usuarios(usuario);
@@ -50,7 +59,7 @@ SELECT
     'Sistema',
     'admin@local',
     'admin',
-    '$2a$10$slYQmyNdGzin7olVN3p5be4DlH.PKZbv5H8KnzzVgXXbVxzy7KLKA',
+    '$2b$12$lgqe13BO6WK8ohboI44npua0Vg02iZtCNMhp5usakm5rq7.tAAOUO',
     r.id,
     'system'
 FROM incidentes_db.cat_roles r

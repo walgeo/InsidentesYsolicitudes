@@ -6,14 +6,12 @@ Aplicación web para la gestión de incidentes y solicitudes de servicio con aut
 
 **¿Qué necesitas instalar?**
 
-> **NADA. SOLO DOCKER DESKTOP.**
-
 ```powershell
 # 1. Tener Docker Desktop instalado
 # 2. Ejecutar UNA línea de comando
-docker-compose up -d
+docker-compose up -d estando situado en la carpeta incidentes y solicitudes
 
-# 3. Listo. El proyecto está corriendo en http://localhost:4200
+# 3. El proyecto está corriendo en http://localhost:4200  el usuario contraseña de acceso son los mismos "admin", sin comillas;
 ```
 
 No necesitas instalar nada.
